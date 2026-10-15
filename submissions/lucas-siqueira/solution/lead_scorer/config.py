@@ -9,6 +9,9 @@ DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 
 @dataclass(frozen=True)
 class ScoringConfig:
+    # Quem usa o app: saudação do topo nas visões Região e Time todo (sem uma pessoa em foco).
+    viewer_name: str = "Lucas"
+
     # "Hoje" do pipeline. O dataset termina em 31/12/2017; usar a data real deixaria
     # todos os deals com ~9 anos de idade.
     reference_date: pd.Timestamp = pd.Timestamp("2017-12-31")

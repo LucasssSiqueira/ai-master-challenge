@@ -174,5 +174,6 @@ def build_priority_list(deals: pd.DataFrame, cfg: ScoringConfig = DEFAULT_CONFIG
     df["needs_crm_fix"] = ~df["has_account"]
     df["reasons"] = [explain.reasons(row, stats, cfg) for row in df.itertuples(index=False)]
     df["action"] = [explain.action(row, stats) for row in df.itertuples(index=False)]
+    df["short_reason"] = [explain.short_reason(row, stats) for row in df.itertuples(index=False)]
     df = df.sort_values(["band", "score", "sales_price"], ascending=[True, False, False]).reset_index(drop=True)
     return df, stats

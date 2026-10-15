@@ -31,11 +31,18 @@ O primeiro comando gera, em `data/processed/`, a tabela analítica, o log de qua
 
 ## Como usar
 
-1. Na barra lateral, escolha **Vendedor** e o seu nome. Managers podem escolher **Manager** ou **Região** para ver também o resumo por vendedor.
-2. **Seu foco esta semana** mostra os 5 deals mais importantes, com a ação recomendada e os motivos.
-3. A aba **Deals ativos** lista todos os deals. Clique em uma linha para ver a composição do score.
-4. A aba **Requalificar** lista os deals parados há mais de 138 dias, do maior valor para o menor.
-5. A aba **Como o score funciona** explica a regra e mostra a validação com dados passados.
+1. No topo, escolha **Vendedor** e o nome. Managers podem escolher **Manager**, **Região** ou **Time todo**.
+2. A **visão geral** responde em 4 áreas:
+   - **Pipeline aberto:** quanto há e em que faixa.
+   - **Saúde do pipeline:** quanto está ativo e quanto está parado.
+   - **Prioridades de hoje:** os 5 deals mais relevantes. Clique em um para ver o detalhe.
+   - **Insight do dia:** o que mais importa mudar, com a ação.
+3. No rail à esquerda:
+   - **Pipeline:** todos os deals ativos, com filtro por faixa e detalhe do score.
+   - **Deals parados:** os deals com mais de 138 dias, do maior valor para o menor.
+   - **Como o score funciona:** a regra e a validação com dados passados.
+
+Toda tela tem endereço próprio (página, escopo, pessoa e deal ficam na URL), então pode ser compartilhada ou recarregada.
 
 ## Lógica
 
@@ -110,7 +117,10 @@ A primeira versão usava 50/30/20 (Valor/Momento/Chance). O backtest comparou 9 
 ## Estrutura
 
 ```
-app.py                    interface (Streamlit), sem regras de negócio
+app.py                    interface (Streamlit): estado, navegação e páginas
+ui/theme.py               tokens visuais, ícones Lucide e CSS
+ui/components.py          blocos de HTML (funções puras, com escape)
+lead_scorer/insights.py   frase do topo, prioridades e insight do dia
 lead_scorer/config.py     pesos, limiares, data de referência
 lead_scorer/data_loader.py leitura, correções, joins, validação
 lead_scorer/scoring.py    componentes do score e faixas
@@ -118,6 +128,7 @@ lead_scorer/explain.py    motivos e ações em português
 lead_scorer/backtest.py   validação com dados passados
 src/data_processing.py    pipeline: validação de chaves, limpeza, tabela analítica, log de qualidade
 src/exploratory_analysis.py números da análise de dados
-tests/                    pytest
+tests/                    pytest (60 testes)
 data/                     CSVs originais
+.streamlit/config.toml    tema base (verde nos widgets nativos)
 ```

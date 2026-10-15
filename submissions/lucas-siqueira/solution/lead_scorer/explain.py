@@ -9,6 +9,30 @@ def money(value: float) -> str:
     return f"US$ {value:,.0f}".replace(",", ".")
 
 
+def money_short(value: float) -> str:
+    """Valor compacto para números grandes: US$ 3,2 mi, US$ 41 mil."""
+    if value >= 1_000_000:
+        return f"US$ {value / 1_000_000:.1f} mi".replace(".", ",")
+    if value >= 1_000:
+        return f"US$ {value / 1_000:.0f} mil"
+    return money(value)
+
+
+def short_reason(row: Any, stats: Any) -> str:
+    """Justificativa de uma linha para listas: o momento do deal, sem jargão."""
+    seg = row.timing_segment
+    if seg == "not_engaged":
+        return "Ainda não engajado"
+    days = int(row.age_days)
+    if seg == "stale":
+        return f"Parado há {days} dias"
+    if seg == "early":
+        return f"Dia {days}, fase inicial"
+    if seg == "window":
+        return f"Dia {days}, dentro da janela"
+    return f"Dia {days}, saindo da janela"
+
+
 def _first_name(full_name: str) -> str:
     return full_name.split()[0]
 
@@ -78,7 +102,7 @@ def prob_reason(row: Any, stats: Any) -> tuple[str, str]:
 _POLARITY_ORDER = {POSITIVE: 0, NEUTRAL: 1, NEGATIVE: 2, INFO: 3}
 
 # O porquê completo está na aba "Como o score funciona"; aqui basta o aviso.
-PROB_NOT_SCORED = "Informativo: não entra no score (veja *Como o score funciona*)."
+PROB_NOT_SCORED = "Informativo: não entra no score (detalhes em “Como o score funciona”)."
 
 
 def reasons(row: Any, stats: Any, cfg: Any) -> list[str]:
