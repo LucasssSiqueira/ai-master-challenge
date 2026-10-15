@@ -51,6 +51,17 @@ _ICON_PATHS = {
     "arrow-right": '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
     "arrow-up-right": '<path d="M7 7h10v10"/><path d="M7 17 17 7"/>',
     "chevron-right": '<path d="m9 18 6-6-6-6"/>',
+    "chevron-left": '<path d="m15 18-6-6 6-6"/>',
+    "chevron-down": '<path d="m6 9 6 6 6-6"/>',
+    "search": '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+    "sliders-horizontal": '<line x1="21" x2="14" y1="4" y2="4"/><line x1="10" x2="3" y1="4" y2="4"/>'
+                          '<line x1="21" x2="12" y1="12" y2="12"/><line x1="8" x2="3" y1="12" y2="12"/>'
+                          '<line x1="21" x2="16" y1="20" y2="20"/><line x1="12" x2="3" y1="20" y2="20"/>'
+                          '<line x1="14" x2="14" y1="2" y2="6"/><line x1="8" x2="8" y1="10" y2="14"/>'
+                          '<line x1="16" x2="16" y1="18" y2="22"/>',
+    "x": '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
+    "check": '<path d="M20 6 9 17l-5-5"/>',
+    "arrow-down-up": '<path d="m3 16 4 4 4-4"/><path d="M7 20V4"/><path d="m21 8-4-4-4 4"/><path d="M17 4v16"/>',
 }
 
 
@@ -198,30 +209,8 @@ div[class*="st-key-card"] {{
 }}
 .ls-cta:hover {{ background: #232A26; }}
 
-/* ---------- Detail ---------- */
-.ls-detail-head {{ display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; }}
-.ls-detail-title {{ font-size: 22px; font-weight: 500; letter-spacing: -0.02em; }}
-.ls-detail-meta {{ font-size: 14px; color: {MUTED}; margin-top: 6px; }}
-.ls-meter {{ margin-top: 18px; }}
-.ls-meter-label {{ display: flex; justify-content: space-between; font-size: 14px; color: {MUTED}; margin-bottom: 8px; }}
-.ls-meter-track {{ height: 8px; background: {TILE}; border-radius: 999px; overflow: hidden; }}
-.ls-meter-fill {{ height: 100%; background: {GREEN}; border-radius: 999px; }}
-.ls-reasons {{ list-style: none; padding: 0; margin: 4px 0 0; }}
-.ls-reasons li {{ display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; font-size: 15px; line-height: 1.5; }}
-.ls-reasons .ls-dot {{ margin-top: 7px; }}
-
 /* ---------- Widgets dentro dos cards ---------- */
 div[class*="st-key-card"] [data-testid="stDataFrame"] {{ border-radius: 16px; overflow: hidden; }}
-.st-key-bands button {{
-    border-radius: 999px !important; border: 1px solid {LINE} !important; background: {CARD} !important;
-    box-shadow: none !important;
-}}
-.st-key-bands button[data-testid="stBaseButton-pillsActive"], .st-key-bands button[data-selected="true"] {{
-    background: {INK} !important; border-color: {INK} !important;
-}}
-.st-key-bands button {{ color: {MUTED} !important; padding: 8px 16px !important; }}
-.st-key-bands button[data-testid="stBaseButton-pillsActive"] *, .st-key-bands button[data-selected="true"],
-.st-key-bands button[data-selected="true"] * {{ color: #fff !important; }}
 [data-testid="stMetricValue"] {{ font-weight: 450; letter-spacing: -0.03em; }}
 div[class*="st-key-card"] [data-testid="stMarkdownContainer"] {{ font-size: 15px; line-height: 1.65; }}
 div[class*="st-key-card"] [data-testid="stMarkdownContainer"] h3 {{

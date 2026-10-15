@@ -28,8 +28,8 @@ Os dados (CSVs do Kaggle, licença CC0) já estão em `solution/data/`. Detalhes
 
 | Pasta | Conteúdo |
 |---|---|
-| [`solution/`](solution/) | App, motor de scoring, pipeline de dados, 60 testes |
-| [`docs/`](docs/) | Requisitos, arquitetura, plano, análise de dados, dicionário de dados e auditoria de qualidade (doc 08) e redesign da interface (doc 09) |
+| [`solution/`](solution/) | App, motor de scoring, pipeline de dados, 64 testes + 13 no navegador |
+| [`docs/`](docs/) | Requisitos, arquitetura, plano, análise de dados, dicionário de dados e auditoria de qualidade (doc 08) redesign da interface (doc 09) e do Pipeline (doc 10) |
 | [`process-log/`](process-log/) | Evidências do uso de IA: narrativa, scripts, screenshots, export da conversa |
 
 ### Abordagem
@@ -44,9 +44,9 @@ Os dados (CSVs do Kaggle, licença CC0) já estão em `solution/data/`. Detalhes
 
 **O app:**
 
-| Visão geral | Pipeline com o detalhe do score |
+| Visão geral | Pipeline com o painel do deal |
 |---|---|
-| ![Visão geral](process-log/screenshots/09-ui-redesign-visao-geral.png) | ![Detalhe](process-log/screenshots/10-ui-redesign-pipeline-detalhe.png) |
+| ![Visão geral](process-log/screenshots/09-ui-redesign-visao-geral.png) | ![Pipeline com painel](process-log/screenshots/14-pipeline-drawer.png) |
 
 - Visões por vendedor, manager, região e time todo. As visões de gestão incluem o resumo por vendedor (abertos, Alta, parados, valor parado).
 - Cada deal traz score, faixa, ação recomendada e de 3 a 4 motivos em português, com número, unidade e comparação. Exemplo: "Dia 57 de engajamento: dentro da janela em que deals ganhos costumam fechar (9–88 dias)."
@@ -108,8 +108,9 @@ O trabalho foi dividido em etapas, e eu aprovei cada uma antes da seguinte:
 5. **Etapa 05 — Auditoria de qualidade.** Pedi uma auditoria técnica com classificação P0–P3 e a regra de não declarar teste aprovado sem executá-lo. Foram encontrados e corrigidos 1 P0 (crash ao trocar de vendedor com uma linha selecionada), 3 P1 (seleção apontando para o deal errado, vazamento ao mudar a data de referência e versões mínimas de dependências que não funcionavam) e 5 P2. Os testes foram de 30 para 41, rodados nas versões mínimas e nas mais recentes ([doc 08](docs/08-quality-assurance.md)).
 
 6. **Redesign da interface.** Pedi uma interface minimalista a partir de uma imagem de referência, com a regra "se não ajuda a decidir, não fica na tela principal". Primeiro revisamos os excessos da versão anterior; depois reconstruímos a interface em 4 áreas (pipeline, saúde, prioridades e insight), com o motor de score intocado. A validação no navegador encontrou e corrigiu 6 problemas, e os testes foram de 41 para 60 ([doc 09](docs/09-ui-redesign.md)).
+7. **Redesign do Pipeline.** Pedi uma tabela no padrão de um SaaS premium, com busca, filtros, ordenação e painel lateral, sem mexer no score. Os botões pretos e o grid estilo Excel deram lugar a um componente único, testado em 13 cenários no navegador real e nas duas faixas de versão ([doc 10](docs/10-pipeline-ux.md)).
 
-Narrativas detalhadas: [`etapa-02-implementacao.md`](process-log/etapa-02-implementacao.md), [`etapa-02b-dados.md`](process-log/etapa-02b-dados.md) [`etapa-05-qa.md`](process-log/etapa-05-qa.md) e [`etapa-06-ui.md`](process-log/etapa-06-ui.md). Scripts da exploração inicial: [`process-log/eda/`](process-log/eda/).
+Narrativas detalhadas: [`etapa-02-implementacao.md`](process-log/etapa-02-implementacao.md), [`etapa-02b-dados.md`](process-log/etapa-02b-dados.md) [`etapa-05-qa.md`](process-log/etapa-05-qa.md) e [`etapa-06-ui.md`](process-log/etapa-06-ui.md) e [`etapa-07-pipeline.md`](process-log/etapa-07-pipeline.md). Scripts da exploração inicial: [`process-log/eda/`](process-log/eda/).
 
 ### Onde a IA errou e como corrigi
 

@@ -4,6 +4,7 @@ from pathlib import Path
 
 import pandas as pd
 import streamlit as st
+import streamlit.components.v1 as components
 
 # Garante o import dos pacotes locais seja qual for o diretório de execução (e no AppTest de versões antigas).
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -12,13 +13,15 @@ from lead_scorer import insights  # noqa: E402
 from lead_scorer.backtest import run_backtest  # noqa: E402
 from lead_scorer.config import DEFAULT_CONFIG as CFG  # noqa: E402
 from lead_scorer.data_loader import DataValidationError, load_deals  # noqa: E402
-from lead_scorer.scoring import BAND_ORDER, build_priority_list  # noqa: E402
+from lead_scorer.scoring import build_priority_list  # noqa: E402
 from ui import components as ui  # noqa: E402
-from ui.theme import BAND_NAMES, CSS, GREEN, STONE  # noqa: E402
+from ui import pipeline_table  # noqa: E402
+from ui.theme import CSS, GREEN, STONE  # noqa: E402
 
 st.set_page_config(page_title="Lead Scorer", page_icon="🎯", layout="wide", initial_sidebar_state="collapsed")
 st.markdown(f"<style>{CSS}</style>", unsafe_allow_html=True)
 
+TABLE_HEIGHT = 860
 SCOPES = {"Vendedor": "sales_agent", "Manager": "manager", "Região": "regional_office", "Time todo": None}
 PAGE_IDS = [page for page, _, _ in ui.PAGES]
 
@@ -91,57 +94,18 @@ scope_label = who or "Time todo"
 greeting_name = ui.greeting_name(scope, who, CFG.viewer_name)
 
 
-def deals_table(data: pd.DataFrame, key: str, show_band: bool = True) -> pd.Series | None:
-    """Tabela com seleção de linha; devolve o deal selecionado.
-
-    A seleção do Streamlit é guardada por posição de linha. A chave depende dos deals exibidos,
-    então trocar de vendedor, visão ou faixa zera a seleção, em vez de apontar para outro deal
-    ou para uma posição que não existe mais.
-    """
-    show = pd.DataFrame({
-        "Faixa": data["band"].map(BAND_NAMES),
-        "Score": data["score"],
-        "Produto": data["product"],
-        "Conta": data["account"].fillna("Não informada"),
-        "Valor": data["sales_price"],
-        "Dias": data["age_days"],
-        "Vendedor": data["sales_agent"],
-        "Próxima ação": data["action"],
-    })
-    if scope == "Vendedor":
-        show = show.drop(columns="Vendedor")  # redundante: a tela inteira é de um vendedor
-    if not show_band:
-        show = show.drop(columns="Faixa")  # redundante numa página de uma faixa só
-    event = st.dataframe(
-        show,
-        hide_index=True,
-        width="stretch",
-        height=min(36 * len(show) + 40, 520),
-        on_select="rerun",
-        selection_mode="single-row",
-        key=f"{key}-{hash(tuple(data['opportunity_id']))}",
-        column_config={
-            "Score": st.column_config.ProgressColumn("Score", min_value=0, max_value=100, format="%d"),
-            "Valor": st.column_config.NumberColumn("Valor (US$)", format="%d"),
-            "Dias": st.column_config.NumberColumn("Dias engajado", format="%d"),
-            "Próxima ação": st.column_config.TextColumn(width="large"),
-        },
+def deals_component(data: pd.DataFrame, *, title: str, noun: tuple[str, str], show_priority: bool,
+                    default_sort: str, initial_deal: str | None = None) -> None:
+    """Tabela interativa: busca, filtros, ordenação e painel de detalhes, sem recarregar a página."""
+    components.html(
+        pipeline_table.render(
+            data, title=title, noun=list(noun), scope_label=scope_label, show_seller=scope != "Vendedor",
+            show_priority=show_priority, default_sort=default_sort, initial_deal=initial_deal,
+            weights=(CFG.weight_value, CFG.weight_timing),
+        ),
+        height=TABLE_HEIGHT,
+        scrolling=False,
     )
-    rows = event.selection.rows
-    if not rows or rows[0] >= len(data):
-        return None
-    return data.iloc[rows[0]]
-
-
-def deal_detail(row: pd.Series | None, hint: str) -> None:
-    if row is None:
-        st.caption(hint)
-        return
-    meters = [("Valor", row["score_value"], CFG.weight_value), ("Momento", row["score_timing"], CFG.weight_timing)]
-    if CFG.weight_prob:
-        meters.append(("Chance", row["score_prob"], CFG.weight_prob))
-    with st.container(key="card_detail"):
-        st.markdown(ui.detail_card(row, meters), unsafe_allow_html=True)
 
 
 # ---------- Visão geral ----------
@@ -163,35 +127,19 @@ if page == "overview":
 
 # ---------- Pipeline ----------
 elif page == "pipeline":
-    active = df[df["band"] != "Requalificar"]
-    st.markdown(ui.page_title("Pipeline", f"{len(active)} deals ativos · {scope_label}"), unsafe_allow_html=True)
-    linked = active[active["opportunity_id"] == st.query_params.get("deal")]
-    with st.container(key="card_pipeline"):
-        bands = st.pills(
-            "Faixas", [b for b in BAND_ORDER if b != "Requalificar"], selection_mode="multi",
-            default=[b for b in BAND_ORDER if b != "Requalificar"], format_func=BAND_NAMES.get,
-            key="bands", label_visibility="collapsed",
-        )
-        selected = deals_table(active[active["band"].isin(bands)], key="active")
-    deal_detail(
-        selected if selected is not None else (linked.iloc[0] if len(linked) else None),
-        "Selecione um deal para ver por que ele tem esse score.",
+    deals_component(
+        df[df["band"] != "Requalificar"], title="Pipeline", noun=("deal ativo", "deals ativos"),
+        show_priority=True, default_sort="priority", initial_deal=st.query_params.get("deal"),
     )
 
 # ---------- Deals parados ----------
 elif page == "requalify":
-    stale = df[df["band"] == "Requalificar"].sort_values("sales_price", ascending=False)
-    st.markdown(
-        ui.page_title(
-            "Deals parados",
-            f"{len(stale)} deals há mais de {CFG.stale_days} dias em negociação, mais do que qualquer deal já fechado. "
-            "Comece pelos de maior valor: confirme ou encerre.",
-        ),
-        unsafe_allow_html=True,
+    # Parados: o que importa é o valor em risco, então a ordem padrão é por valor.
+    deals_component(
+        df[df["band"] == "Requalificar"].sort_values("sales_price", ascending=False, kind="stable"),
+        title="Deals parados", noun=("deal há mais de 138 dias", "deals há mais de 138 dias"),
+        show_priority=False, default_sort="value", initial_deal=st.query_params.get("deal"),
     )
-    with st.container(key="card_stale"):
-        selected = deals_table(stale, key="stale", show_band=False)
-    deal_detail(selected, "Selecione um deal para ver os detalhes.")
 
 # ---------- Como o score funciona ----------
 else:

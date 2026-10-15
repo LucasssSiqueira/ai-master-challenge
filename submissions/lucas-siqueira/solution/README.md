@@ -20,6 +20,12 @@ python -m pytest
 python -m lead_scorer.backtest
 ```
 
+Testes no navegador (opcionais; precisam do app rodando e de `pip install playwright`):
+
+```bash
+LEAD_SCORER_URL=http://localhost:8501 python -m pytest tests/e2e
+```
+
 Pipeline de dados e análise exploratória (detalhes em `docs/04-data-analysis.md` e `docs/05-data-dictionary.md`):
 
 ```bash
@@ -38,8 +44,8 @@ O primeiro comando gera, em `data/processed/`, a tabela analítica, o log de qua
    - **Prioridades de hoje:** os 5 deals mais relevantes. Clique em um para ver o detalhe.
    - **Insight do dia:** o que mais importa mudar, com a ação.
 3. No rail à esquerda:
-   - **Pipeline:** todos os deals ativos, com filtro por faixa e detalhe do score.
-   - **Deals parados:** os deals com mais de 138 dias, do maior valor para o menor.
+   - **Pipeline:** todos os deals ativos, com busca, filtros (prioridade, vendedor, etapa, produto, conta), ordenação (prioridade, score, valor, tempo) e painel lateral com o detalhe do score. Passe o mouse no score para ver os fatores.
+   - **Deals parados:** os deals com mais de 138 dias, do maior valor para o menor, com a mesma tabela.
    - **Como o score funciona:** a regra e a validação com dados passados.
 
 Toda tela tem endereço próprio (página, escopo, pessoa e deal ficam na URL), então pode ser compartilhada ou recarregada.
@@ -120,6 +126,7 @@ A primeira versão usava 50/30/20 (Valor/Momento/Chance). O backtest comparou 9 
 app.py                    interface (Streamlit): estado, navegação e páginas
 ui/theme.py               tokens visuais, ícones Lucide e CSS
 ui/components.py          blocos de HTML (funções puras, com escape)
+ui/pipeline_table.py      tabela interativa: busca, filtros, ordenação, painel lateral
 lead_scorer/insights.py   frase do topo, prioridades e insight do dia
 lead_scorer/config.py     pesos, limiares, data de referência
 lead_scorer/data_loader.py leitura, correções, joins, validação
@@ -128,7 +135,7 @@ lead_scorer/explain.py    motivos e ações em português
 lead_scorer/backtest.py   validação com dados passados
 src/data_processing.py    pipeline: validação de chaves, limpeza, tabela analítica, log de qualidade
 src/exploratory_analysis.py números da análise de dados
-tests/                    pytest (60 testes)
+tests/                    pytest (64 testes; tests/e2e: 13 no navegador)
 data/                     CSVs originais
 .streamlit/config.toml    tema base (verde nos widgets nativos)
 ```

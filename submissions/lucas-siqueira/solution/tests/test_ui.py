@@ -77,14 +77,6 @@ def test_band_summary_covers_every_band_in_order(scored):
     assert summary["share"].sum() == pytest.approx(1.0)
 
 
-def test_html_escapes_data(scored):
-    df, _ = scored
-    row = seller(df).iloc[0].copy()
-    row["account"] = '<script>alert("x")</script>'
-    html = ui.detail_card(row, [("Valor", 10, 60)])
-    assert "<script>" not in html and "&lt;script&gt;" in html
-
-
 def test_html_is_single_line_for_markdown(scored):
     df, _ = scored
     d = seller(df)

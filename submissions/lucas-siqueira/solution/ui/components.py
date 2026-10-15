@@ -8,7 +8,7 @@ from urllib.parse import urlencode
 
 import pandas as pd
 
-from lead_scorer.explain import money, money_short
+from lead_scorer.explain import money_short
 from lead_scorer.insights import Insight
 
 from .theme import BAND_COLORS, BAND_NAMES, LOGO, icon
@@ -149,23 +149,3 @@ def split_reason(reason: str) -> tuple[str, str]:
         if reason.startswith(prefix):
             return color, reason[len(prefix):].strip()
     return REASON_DOT["➖"], reason
-
-
-def detail_card(row: pd.Series, meters: list[tuple[str, float, float]]) -> str:
-    account = row["account"] if isinstance(row["account"], str) else "Conta não informada"
-    bars = "".join(
-        f'<div class="ls-meter"><div class="ls-meter-label"><span>{esc(label)}</span>'
-        f'<span>{pts:.0f} de {weight:.0f}</span></div><div class="ls-meter-track">'
-        f'<div class="ls-meter-fill" style="width:{min(pts / weight, 1) * 100:.1f}%"></div></div></div>'
-        for label, pts, weight in meters
-    )
-    reasons = "".join(f"<li>{dot(c)}<span>{esc(t)}</span></li>" for c, t in map(split_reason, row["reasons"]))
-    return compact(f"""
-        <div class="ls-detail-head"><div>
-        <div class="ls-detail-title">{esc(row["product"])} · {esc(account)}</div>
-        <div class="ls-detail-meta">{money(row["sales_price"])} · {esc(BAND_NAMES[row["band"]])} · {esc(row["sales_agent"])} · ID {esc(row["opportunity_id"])}</div>
-        </div><div class="ls-big" style="font-size:52px">{row["score"]}</div></div>
-        <div class="ls-action" style="margin-top:24px">{icon("arrow-right", 18)}<div>{esc(row["action"])}</div></div>
-        <div style="display:grid;grid-template-columns:1fr 1.4fr;gap:40px;margin-top:10px">
-        <div>{bars}</div><ul class="ls-reasons" style="margin-top:12px">{reasons}</ul></div>
-    """)
