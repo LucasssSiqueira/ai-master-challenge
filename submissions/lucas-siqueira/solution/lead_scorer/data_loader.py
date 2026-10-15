@@ -6,6 +6,10 @@ import pandas as pd
 from .config import DATA_DIR, OPEN_STAGES, PRODUCT_FIXES, SECTOR_FIXES, STAGES
 
 
+# Mesmo vendedor, produto, conta e data de engajamento com IDs diferentes: possível duplicata.
+DUPLICATE_KEY = ["sales_agent", "product", "account", "engage_date"]
+
+
 class DataValidationError(ValueError):
     """Os dados não respeitam uma premissa da qual o scoring depende."""
 
@@ -39,6 +43,7 @@ def build_deals(raw: dict[str, pd.DataFrame]) -> pd.DataFrame:
     deals["is_won"] = deals["deal_stage"].eq("Won")
     deals["has_account"] = deals["account"].notna()
     deals["cycle_days"] = (deals["close_date"] - deals["engage_date"]).dt.days
+    deals["possible_duplicate"] = deals["has_account"] & deals.duplicated(DUPLICATE_KEY, keep=False)
     return deals
 
 

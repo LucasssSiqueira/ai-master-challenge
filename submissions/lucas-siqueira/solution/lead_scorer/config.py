@@ -29,7 +29,8 @@ class ScoringConfig:
     # Distância da média (em pontos de win rate) que leva a chance a 0 ou 20 pontos.
     prob_spread: float = 0.10
 
-    # Faixas entre deals ativos (Engaging dentro do ciclo): top 25% = Alta, próximos 35% = Média.
+    # Faixas entre deals ativos (Engaging dentro do ciclo): score >= percentil 75 = Alta,
+    # >= percentil 40 = Média. Empates no corte sobem de faixa, então a Alta pode passar de 25%.
     high_quantile: float = 0.75
     medium_quantile: float = 0.40
 

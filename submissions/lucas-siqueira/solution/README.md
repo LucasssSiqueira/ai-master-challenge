@@ -4,7 +4,7 @@ App web em que o vendedor escolhe o próprio nome e vê os deals abertos em orde
 
 ## Setup
 
-Requer Python 3.10 ou superior.
+Requer Python 3.11 ou superior. Testado em 3.11 (com as versões mínimas de `requirements.txt`) e em 3.14 (com as mais recentes).
 
 ```bash
 pip install -r requirements.txt
@@ -51,7 +51,7 @@ A **faixa** é decidida antes do score, e o score só ordena os deals dentro de 
 
 | Faixa | Regra | Ação |
 |---|---|---|
-| 🟢 Alta / 🟡 Média / ⚪ Baixa | Engaging com até 138 dias: top 25%, próximos 35% e o restante | Fechar, manter cadência ou tratar em lote |
+| 🟢 Alta / 🟡 Média / ⚪ Baixa | Engaging com até 138 dias: score ≥ percentil 75, entre os percentis 40 e 75, e o restante. Empates no corte sobem de faixa (hoje: 31% / 30% / 40%) | Fechar, manter cadência ou tratar em lote |
 | 🔵 Qualificar | Prospecting, ainda sem data de engajamento | Qualificar e marcar a primeira reunião |
 | 🔴 Requalificar | Engaging há mais de 138 dias | Confirmar se o deal está vivo ou encerrar |
 

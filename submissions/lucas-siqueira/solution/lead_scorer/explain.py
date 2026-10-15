@@ -17,12 +17,23 @@ def value_reason(row: Any, stats: Any) -> tuple[str, str]:
     # Posição do preço na escala log do catálogo (0 = mais barato, 1 = mais caro).
     lo, hi = math.log(stats.min_price), math.log(stats.max_price)
     share = (math.log(row.sales_price) - lo) / (hi - lo)
-    price = money(row.sales_price)
+    detail = f"{row.product} ({money(row.sales_price)}), {_price_rank(row.sales_price, stats)}"
     if share >= 0.65:
-        return POSITIVE, f"Valor alto: {row.product} ({price}), entre os produtos mais caros do catálogo."
+        return POSITIVE, f"Valor alto: {detail}."
     if share >= 0.35:
-        return NEUTRAL, f"Valor médio: {row.product} ({price})."
-    return NEGATIVE, f"Valor baixo: {row.product} ({price}), entre os produtos mais baratos do catálogo."
+        return NEUTRAL, f"Valor médio: {detail}."
+    return NEGATIVE, f"Valor baixo: {detail}."
+
+
+def _price_rank(price: float, stats: Any) -> str:
+    """Posição real do preço no catálogo, em vez de um rótulo vago como "entre os mais caros"."""
+    prices = stats.catalog_prices
+    n, pos = len(prices), prices.index(float(price)) + 1
+    if pos == 1:
+        return f"o mais caro dos {n} produtos"
+    if pos == n:
+        return f"o mais barato dos {n} produtos"
+    return f"o {pos}º mais caro dos {n} produtos"
 
 
 def timing_reason(row: Any, stats: Any) -> tuple[str, str]:
@@ -66,10 +77,8 @@ def prob_reason(row: Any, stats: Any) -> tuple[str, str]:
 
 _POLARITY_ORDER = {POSITIVE: 0, NEUTRAL: 1, NEGATIVE: 2, INFO: 3}
 
-PROB_NOT_SCORED = (
-    "Informativo, não entra no score: no histórico, a chance por vendedor e produto "
-    "não diferencia deals ganhos de perdidos."
-)
+# O porquê completo está na aba "Como o score funciona"; aqui basta o aviso.
+PROB_NOT_SCORED = "Informativo: não entra no score (veja *Como o score funciona*)."
 
 
 def reasons(row: Any, stats: Any, cfg: Any) -> list[str]:
@@ -80,6 +89,9 @@ def reasons(row: Any, stats: Any, cfg: Any) -> list[str]:
     items = [value_reason(row, stats), timing_reason(row, stats), prob]
     if not row.has_account:
         items.append((NEGATIVE, "Conta não informada no CRM: sem setor e porte do cliente para análise."))
+    if row.possible_duplicate:
+        items.append((NEGATIVE, "Possível duplicata: há outro deal com mesmo vendedor, produto, conta e data "
+                                "de engajamento. Confirme no CRM antes de trabalhar os dois."))
     items.sort(key=lambda item: _POLARITY_ORDER[item[0]])
     return [f"{icon} {text}" for icon, text in items]
 

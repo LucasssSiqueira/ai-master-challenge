@@ -125,3 +125,4 @@ def test_app_loader_agrees_with_pipeline(result):
     for col in ["product", "sales_price", "manager", "regional_office", "deal_stage"]:
         assert (app[col] == pipe[col]).all(), col
     assert (app["sector"].fillna("-") == pipe["sector"].fillna("-")).all()
+    assert (app["possible_duplicate"] == pipe["possible_duplicate"]).all()

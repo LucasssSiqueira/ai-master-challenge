@@ -539,3 +539,369 @@ Checking the open-pipeline value claim before moving on.
 Exporting the conversation for the process log. It goes to your Downloads folder; since the PR is public, I'll check it for personal data before suggesting it go in the submission.
 
 - `export_transcript` 
+- `Bash` Inspect export for personal data before including it
+- `Bash` Inspect transcript structure
+- `Bash` Build sanitized readable chat export and check it
+### 🤖 Assistente
+
+Sanitized export: all 6 of your messages (including both stage prompts) are there, with 0 emails and 0 local paths. Quick skim for anything odd.
+
+- `Bash` Skim the sanitized export
+### 🤖 Assistente
+
+Readable export looks right. Now the final clean-install test of the whole submission folder, plus a check that every link in the README points to a real file.
+
+- `update_plan` 
+- `Bash` Check README links and run clean-install test
+### 🤖 Assistente
+
+All README links resolve, and the clean install passes (30 tests, pipeline, all 4 views). Checking whether GitHub CLI is set up for the fork and PR.
+
+- `Bash` Check GitHub CLI and git availability
+### 🤖 Assistente
+
+Everything is ready locally, and GitHub CLI is logged in as **LucasssSiqueira**. Opening the PR publishes the work publicly, so I need your go-ahead and the details the template asks for.
+
+- `AskUserQuestion` 
+### 🤖 Assistente
+
+Going ahead: name **Lucas Siqueira**, LinkedIn left as `[URL]`, and the PR opens now.
+
+- `update_plan` 
+- `Bash` Fill name and date; check git identity
+### 🤖 Assistente
+
+Git identity is already configured globally. Forking and cloning.
+
+- `update_plan` 
+- `Bash` Fork the challenge repo and clone the fork
+### 🤖 Assistente
+
+The fork already existed in your account, so before adding anything I'll check whether it has earlier work: other branches, or an open PR from you upstream.
+
+- `Bash` Check fork for existing branches and PRs
+- `Bash` Create branch, copy submission, scan for sensitive data
+### 🤖 Assistente
+
+No sensitive data found. Committing in logical groups (by content, not as a reconstructed timeline).
+
+- `update_plan` 
+- `Bash` Create four commits on the submission branch
+### 🤖 Assistente
+
+No commits were made: the upstream `.gitignore` ignores the `submissions` folder. Checking that file before deciding how to proceed.
+
+- `Bash` Inspect upstream gitignore and how others submit
+- `Bash` Commit submission files with force-add
+### 🤖 Assistente
+
+Four commits, all 39 files inside `submissions/lucas-siqueira/`. Pushing and opening the PR.
+
+- `update_plan` 
+- `Bash` Push branch and open the submission PR
+### 🤖 Assistente
+
+PR opened. Verifying it on GitHub and binding it to this session.
+
+- `Bash` Verify PR contents on GitHub
+- `ToolSearch` 
+- `get_status` 
+- `wrap_up` 
+### 🤖 Assistente
+
+A submissão está aberta: [Gestao-Quatro-Ponto-Zero/ai-master-challenge#196](https://github.com/Gestao-Quatro-Ponto-Zero/ai-master-challenge/pull/196), com o título "[Submission] Lucas Siqueira — Challenge 003". O GitHub não aponta conflito com o `main`. O repositório não tem testes automáticos, então o PR agora só espera a revisão da organização.
+
+Antes de abrir, testei tudo numa instalação limpa: os 30 testes passaram, o pipeline rodou e o app abriu sem erros nas 4 visões.
+
+**Conteúdo:** são 39 arquivos, todos dentro de `submissions/lucas-siqueira/`, em 4 commits:
+1. Os documentos de planejamento e os scripts da análise inicial.
+2. O app.
+3. O pipeline de dados com os documentos de análise.
+4. O README da submissão e o process log.
+
+**O README** segue o template do desafio: resumo, abordagem, resultados com screenshots, recomendações, limitações e o relato de como a IA foi usada. Ele inclui a tabela dos erros da IA e como foram corrigidos.
+
+**Três pontos para você saber:**
+- **Export da conversa:** o export completo ficou no seu Downloads (`session-export-1792089508717.zip`), mas não foi para o PR. Ele continha seu email 4 vezes e cerca de 2.270 caminhos locais. No PR entrou uma versão legível em [conversa-claude-code.md](process-log/chat-exports/conversa-claude-code.md), com suas 6 mensagens e minhas respostas, sem email e sem caminhos. Ela termina no início desta etapa de entrega.
+- **`.gitignore` do desafio:** o repositório ignora a pasta `submissions/`, então incluí só a nossa pasta à força, sem mexer no `.gitignore`. É assim que os outros candidatos enviam (por exemplo, PRs 191 e 192).
+- **Fork já existente:** a cópia do repositório na sua conta já existia, mas estava igual ao original e sem nenhum envio anterior. Nada foi sobrescrito.
+
+**Falta só o LinkedIn**, que ficou como `[URL]` no README. Se quiser preencher, me passe o link e eu atualizo o mesmo PR.
+
+---
+
+## 👤 Usuário
+
+ETAPA 05 — QUALITY ASSURANCE & TECHNICAL AUDIT
+Atue como um Principal Software Engineer responsável pela auditoria técnica e funcional de uma aplicação de Sales Intelligence.
+A solução foi desenvolvida nas etapas anteriores.
+Sua responsabilidade agora não é adicionar funcionalidades, mas identificar falhas e corrigir problemas relevantes.
+Auditoria
+1. Dados
+
+* Verifique integridade dos relacionamentos.
+* Identifique duplicações indevidas.
+* Confira os totais calculados.
+* Valide o tratamento dos dados ausentes.
+
+2. Scoring
+
+* Confira a escala de 0 a 100.
+* Teste casos extremos.
+* Avalie consistência das explicações.
+* Identifique possível data leakage.
+* Verifique se a priorização segue a metodologia documentada.
+
+3. Aplicação
+
+* Execute a aplicação.
+* Teste filtros e navegação.
+* Verifique estados vazios.
+* Teste registros incompletos.
+* Confirme que a seleção de oportunidades apresenta os dados corretos.
+
+4. Usabilidade
+
+* Avalie a clareza da interface.
+* Identifique informações desnecessárias.
+* Verifique se as prioridades ficam evidentes.
+* Avalie o fluxo de trabalho do vendedor.
+
+5. Manutenibilidade
+
+* Identifique código duplicado.
+* Verifique tratamento de exceções.
+* Revise organização dos módulos.
+* Confirme dependências e instruções de setup.
+
+Entregáveis
+Crie `docs/08-quality-assurance.md` contendo:
+
+* Problemas encontrados.
+* Gravidade de cada problema.
+* Causa identificada.
+* Correção executada.
+* Evidência do teste.
+* Limitações pendentes.
+
+Classificação
+
+* P0: impede o funcionamento.
+* P1: compromete a confiança ou a decisão comercial.
+* P2: compromete parcialmente a usabilidade.
+* P3: melhoria não essencial.
+
+Resolva todos os problemas P0 e P1 identificados antes da entrega.
+Não declare testes como aprovados sem realmente executá-los.
+Ao final, apresente o status de cada critério de aceite e indique o que permanece pendente.
+
+### 🤖 Assistente
+
+This is a new stage (audit) of the same project, so I'll do it here. Plan: audit each area with real tests, fix every P0/P1, document it in `docs/08-quality-assurance.md`, and then ask before updating PR #196, since that is public.
+
+- `update_plan` 
+- `Bash` Audit data totals independently against the app
+- `update_plan` 
+- `Bash` Audit scoring scale, edge cases, and leakage
+- `update_plan` 
+- `Bash` Exercise every filter option and empty states
+- `preview_list` 
+- `Bash` Find sellers with few and many active rows
+- `browser_batch` 
+### 🤖 Assistente
+
+Testing the row selection in the browser now. I'm going back to the default viewport so screenshots are readable.
+
+- `browser_batch` 
+- `browser_batch` 
+- `browser_batch` 
+### 🤖 Assistente
+
+Two checks here. First I'll sort the table by Score (click the header), select the top row, and see whether the detail shows that deal. Then I'll check whether the selection survives a seller change.
+
+- `browser_batch` 
+- `browser_batch` 
+- `browser_batch` 
+- `computer` 
+- `Bash` Save evidence and find available Python versions
+- `update_plan` 
+### 🤖 Assistente
+
+Python 3.11 is available. Testing two installs on it: one with the minimum versions `requirements.txt` allows (pandas 2.2.0, streamlit 1.46.0), and one with whatever pip resolves by default.
+
+- `Bash` Test setup with minimum and latest dependency versions
+- `Bash` Start app with minimum versions on port 8502
+- `browser_batch` 
+### 🤖 Assistente
+
+With the minimum versions, a real `streamlit run` works, so the import failure only affects the 1.46 test harness. Checking the rest of the page for errors under the old version (charts, tabs).
+
+- `find` 
+- `find` 
+- `Bash` Tighten requirements and test new minimum versions
+- `update_plan` 
+- `Read` <projeto>/solution/lead_scorer/scoring.py
+- `Bash` Apply point-in-time and guard fixes to scoring
+- `Bash` Fix value wording, add duplicate flag and reason
+### 🤖 Assistente
+
+Now the app: a selection key per filter context plus a bounds guard (P0), a friendly error when the data can't load, and the small usability fixes.
+
+- `Read` <projeto>/solution/app.py
+- `Bash` Find band-percentage claims to correct
+- `Bash` Apply app, README and config fixes
+### 🤖 Assistente
+
+The key expression I wrote is clumsy. A key derived from the exact set of IDs shown is simpler, and correct by construction: same rows keep the selection, different rows reset it.
+
+- `Bash` Simplify the selection key and check syntax
+### 🤖 Assistente
+
+Code compiles. Adding regression tests that pin down each fix.
+
+- `Write` <projeto>/solution/tests/test_qa_regressions.py
+- `Bash` Run the full test suite with regressions
+- `Edit` <projeto>/solution/tests/test_qa_regressions.py
+- `Bash` Rerun tests, leakage audit, and backtest
+- `preview_stop` 
+- `preview_start` lead-scorer
+- `browser_batch` 
+- `computer` 
+- `browser_batch` 
+### 🤖 Assistente
+
+Re-running the crash scenario in the browser to confirm the P0 fix.
+
+- `browser_batch` 
+- `find` 
+- `read_page` 
+- `browser_batch` 
+- `browser_batch` 
+- `browser_batch` 
+### 🤖 Assistente
+
+Still on Anna, so the seller switch didn't register. Picking the seller from the dropdown list instead of typing.
+
+- `browser_batch` 
+- `find` 
+### 🤖 Assistente
+
+Maureen is selected; the earlier screenshot was taken before the page re-rendered. Closing the dropdown and going to the table.
+
+- `browser_batch` 
+- `computer` 
+### 🤖 Assistente
+
+The Vendedor column no longer shows in the seller view. Closing the sidebar, then sorting by Score and selecting the lowest-score row.
+
+- `browser_batch` 
+- `find` 
+- `browser_batch` 
+- `computer` 
+- `browser_batch` 
+### 🤖 Assistente
+
+Row position 17 (H0RRUQZ6) is selected again, the same setup that crashed before. Switching to Hayden Neloms.
+
+- `browser_batch` 
+- `browser_batch` 
+- `browser_batch` 
+- `browser_batch` 
+### 🤖 Assistente
+
+No traceback, Hayden's 6 rows with no selection, and the "click a row" prompt in place. Saving that, then running the full app on the new minimum dependency versions.
+
+- `Bash` Run tests and app with new minimum versions
+- `browser_batch` 
+- `Bash` Find first Streamlit version supporting width stretch
+### 🤖 Assistente
+
+Rewriting with guarded variables, as the safety check suggests (and the `rm` is only needed for fresh dirs, so I'll drop it).
+
+- `Bash` Check which Streamlit versions accept width stretch
+### 🤖 Assistente
+
+1.47 has no support, 1.48 has partial references, and 1.49 has full support. I'll set the minimum to 1.49 and run the whole app on 1.49.0 to confirm.
+
+- `Bash` Raise Streamlit minimum to 1.49 and start it
+- `browser_batch` 
+### 🤖 Assistente
+
+Still loading (first run computes the cache). Waiting a bit longer.
+
+- `browser_batch` 
+- `Bash` Check the minimum-version server log
+- `Bash` Restart minimum-version server on Streamlit 1.49
+- `browser_batch` 
+- `Bash` Shorten chance text, test error path and AppTest on 1.49
+- `Edit` <projeto>/solution/app.py
+- `Bash` Run tests and app audit on minimum and latest versions
+- `update_plan` 
+- `Bash` Find stale Python-version and test-count claims
+- `Bash` Update Python version and test count claims
+- `Write` <projeto>/docs/08-quality-assurance.md
+### 🤖 Assistente
+
+Checking the doc's own numbers before finishing: the P3 counts in my summary table look wrong, and so does one version number.
+
+- `Bash` Verify numbers cited in the QA doc
+- `Bash` Fix QA doc counts and add QA process log
+### 🤖 Assistente
+
+Adding the audit to the submission README's workflow, then a final full test run before asking about the PR.
+
+- `Bash` Final tests, link check and sensitive-data scan
+- `Bash` Scan submission files for sensitive data
+- `wrap_up` 
+### 🤖 Assistente
+
+A auditoria está concluída: corrigi todos os problemas P0 e P1 encontrados, mais os P2, e documentei tudo em [08-quality-assurance.md](docs/08-quality-assurance.md). Ainda não enviei nada ao PR 196, que é público; aguardo sua confirmação.
+
+**Problemas encontrados e corrigidos:**
+- **P0 — o app quebrava ao trocar de vendedor com uma linha selecionada.** O Streamlit guarda a seleção pela posição da linha. Com a linha 17 selecionada para Maureen, trocar para Hayden (6 linhas) gerava um erro na tela. Agora a seleção é zerada sempre que a lista exibida muda. Reproduzi o erro e a correção no navegador (screenshots 06 e 07 no process log).
+- **P1 — a seleção apontava para o deal errado.** Mesma causa: quando a posição ainda existia, o app marcava um deal que o vendedor não clicou.
+- **P1 — mudar a data de referência usava dados do futuro.** O README diz que essa data é ajustável. Com 30/06/2017, o score usava 4.032 deals fechados depois dessa data e listava 873 deals com idade negativa. Agora o app reconstrói o pipeline como estava naquela data. Com a data padrão nada muda (2.089 deals, backtest em 48,3%).
+- **P1 — as versões mínimas do `requirements.txt` não funcionavam.** Nunca tinham sido instaladas. Testadas agora, quebravam todas as tabelas de deals de duas formas diferentes. Os novos mínimos são pandas 2.2.2, numpy 2.0 e streamlit 1.49. Escolhi o 1.49 conferindo o código-fonte das versões 1.47 a 1.50, e testei o app inteiro com esses mínimos.
+- **P2 (5 itens):**
+  - A faixa Alta tem 31% dos deals ativos, não os 25% documentados, porque empates no corte sobem de faixa. Corrigi a documentação, não a regra.
+  - O MG Advanced, 4º produto mais caro de 7, era descrito como "entre os mais caros". O texto agora diz a posição exata.
+  - 13 deals que parecem duplicados não tinham nenhum aviso; agora mostram um alerta para conferir no CRM.
+  - Se um CSV faltar, o app mostra uma mensagem em português em vez de um erro técnico com caminhos do computador.
+  - A frase longa sobre a chance, repetida em todo card, ficou curta.
+
+Os testes passaram de 30 para 41 e rodam sem falha nas versões mínimas (Python 3.11) e nas mais recentes (Python 3.14). As 37 combinações de filtro também rodam sem erro nos dois ambientes.
+
+**Status dos critérios de aceite (doc 03):**
+
+| Critério | Status |
+|---|---|
+| CA1 Roda em ambiente limpo | Atendido (versões mínimas e atuais) |
+| CA2 Dados reais, 8.800 deals, 2.089 abertos | Atendido |
+| CA3 Nenhum deal sem preço | Atendido |
+| CA4 Filtros por vendedor, manager e região | Atendido |
+| CA5 Score, faixa, motivos e ação em todo deal | Atendido |
+| CA6 Score não é só ordenar por valor | Atendido |
+| CA7 Parados há mais de 138 dias vão para Requalificar | Atendido |
+| CA8 No máximo 15 deals em Alta por vendedor | Atendido (máximo de 8) |
+| CA9 Pessoa não técnica entende o top 5 em menos de 30 s | **Pendente**: precisa de um teste com uma pessoa real |
+| CA10 README com setup, lógica e limitações | Atendido |
+| CA11 Resultado do backtest publicado | Atendido |
+| CA12 Process log completo | Atendido |
+| CA13 Testes passando | Atendido (41 de 41) |
+
+**O que continua pendente:**
+- **Limpeza dos dados em dois lugares (P3):** as correções existem tanto no app quanto no pipeline de dados. Um teste falha se os dois divergirem.
+- **Python 3.10 não testado (P3):** a versão não estava disponível aqui, então o README passou a pedir 3.11 ou superior.
+- **Prospects em datas passadas:** com uma data de referência anterior, deals sem nenhuma data entram sempre, porque o dataset não registra quando foram criados.
+- **CA9**, que depende de uma pessoa.
+
+Não existem docs 06 e 07 porque as etapas 03 e 04 não foram pedidas separadamente. O doc 08 segue a numeração que você indicou.
+
+---
+
+## 👤 Usuário
+
+Pode enviar as correções da auditoria para o PR 196 (novo commit na mesma branch).
+
+- `update_plan` 
+- `export_transcript` 

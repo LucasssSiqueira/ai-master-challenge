@@ -16,7 +16,7 @@ Construí um app em Streamlit em que o vendedor escolhe o próprio nome e vê o 
 
 ## Solução
 
-**Como rodar** (Python 3.10+):
+**Como rodar** (Python 3.11+; testado em 3.11 e 3.14):
 
 ```bash
 cd solution
@@ -28,8 +28,8 @@ Os dados (CSVs do Kaggle, licença CC0) já estão em `solution/data/`. Detalhes
 
 | Pasta | Conteúdo |
 |---|---|
-| [`solution/`](solution/) | App, motor de scoring, pipeline de dados, 30 testes |
-| [`docs/`](docs/) | Requisitos, arquitetura, plano, análise de dados e dicionário de dados |
+| [`solution/`](solution/) | App, motor de scoring, pipeline de dados, 41 testes |
+| [`docs/`](docs/) | Requisitos, arquitetura, plano, análise de dados, dicionário de dados e auditoria de qualidade (doc 08) |
 | [`process-log/`](process-log/) | Evidências do uso de IA: narrativa, scripts, screenshots, export da conversa |
 
 ### Abordagem
@@ -105,7 +105,9 @@ O trabalho foi dividido em etapas, e eu aprovei cada uma antes da seguinte:
 3. **Revisão dos pesos.** Ao ver o backtest, pedi para rever os pesos antes da entrega. A IA comparou 9 combinações, eu escolhi 60/40/0 e ela propagou a mudança para código, testes e documentação.
 4. **Etapa 02 — Data Engineering.** Pedi um pipeline auditável e regras explícitas contra vazamento: não usar `close_value` como previsão, não usar informação pós-fechamento, não inventar datas. Resultado: pipeline, testes de integridade e docs 04–05.
 
-Narrativas detalhadas: [`etapa-02-implementacao.md`](process-log/etapa-02-implementacao.md) e [`etapa-02b-dados.md`](process-log/etapa-02b-dados.md). Scripts da exploração inicial: [`process-log/eda/`](process-log/eda/).
+5. **Etapa 05 — Auditoria de qualidade.** Pedi uma auditoria técnica com classificação P0–P3 e a regra de não declarar teste aprovado sem executá-lo. Foram encontrados e corrigidos 1 P0 (crash ao trocar de vendedor com uma linha selecionada), 3 P1 (seleção apontando para o deal errado, vazamento ao mudar a data de referência e versões mínimas de dependências que não funcionavam) e 5 P2. Os testes foram de 30 para 41, rodados nas versões mínimas e nas mais recentes ([doc 08](docs/08-quality-assurance.md)).
+
+Narrativas detalhadas: [`etapa-02-implementacao.md`](process-log/etapa-02-implementacao.md), [`etapa-02b-dados.md`](process-log/etapa-02b-dados.md) e [`etapa-05-qa.md`](process-log/etapa-05-qa.md). Scripts da exploração inicial: [`process-log/eda/`](process-log/eda/).
 
 ### Onde a IA errou e como corrigi
 
@@ -117,6 +119,9 @@ Narrativas detalhadas: [`etapa-02-implementacao.md`](process-log/etapa-02-implem
 | A checagem de qualidade contava campos vazios como "alterados" (4 falsos alertas) | Leitura do log na primeira execução | Comparar só valores presentes |
 | Números errados em rascunhos: "metade dos vendedores sem deal ativo" (eram 6 de 27), "77% nos EUA" (eram 83%) e outros | Cada número foi conferido com código antes de publicar | Corrigidos; registro no process log |
 | O prompt da Etapa 02 dizia para não implementar o scoring, mas ele já existia | Conflito sinalizado na hora | Scoring intocado; dados como camada separada, com teste de consistência entre as duas |
+| Uma linha selecionada derrubava o app ao trocar de vendedor ([antes](process-log/screenshots/06-qa-p0-indexerror-troca-vendedor.jpg) / [depois](process-log/screenshots/07-qa-p0-corrigido-troca-vendedor.jpg)) | Auditoria no navegador (Etapa 05) | Seleção zerada a cada mudança dos deals exibidos |
+| A data de referência "ajustável" usava deals fechados no futuro | Auditoria com data alternativa | Reconstrução do pipeline como era na data, com teste |
+| `requirements.txt` aceitava versões que quebravam as tabelas | Instalação com as versões mínimas | Mínimos corrigidos e testados |
 
 ### O que eu adicionei que a IA sozinha não faria
 

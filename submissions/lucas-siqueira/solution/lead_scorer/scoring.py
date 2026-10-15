@@ -29,6 +29,7 @@ class HistoryStats:
     lost_median: float
     min_price: float
     max_price: float
+    catalog_prices: tuple[float, ...]  # preços distintos do catálogo, do maior para o menor
     rates: pd.DataFrame  # sales_agent, product, n_closed, win_rate (com shrinkage)
 
 
@@ -37,6 +38,8 @@ def history_stats(history: pd.DataFrame, catalog_prices: pd.Series, cfg: Scoring
     if closed.empty:
         raise ValueError("é preciso ao menos um deal fechado para calcular o histórico")
     won_cycle = closed.loc[closed["is_won"], "cycle_days"]
+    if won_cycle.empty:
+        raise ValueError("é preciso ao menos um deal ganho para calcular a janela de fechamento")
     base = float(closed["is_won"].mean())
 
     grouped = closed.groupby(["sales_agent", "product"])["is_won"].agg(wins="sum", n_closed="count").reset_index()
@@ -51,6 +54,7 @@ def history_stats(history: pd.DataFrame, catalog_prices: pd.Series, cfg: Scoring
         lost_median=float(closed.loc[~closed["is_won"], "cycle_days"].median()),
         min_price=float(catalog_prices.min()),
         max_price=float(catalog_prices.max()),
+        catalog_prices=tuple(sorted(set(catalog_prices.astype(float)), reverse=True)),
         rates=grouped[["sales_agent", "product", "n_closed", "win_rate"]],
     )
 
@@ -79,6 +83,8 @@ def timing_points(age_days: pd.Series, stats: HistoryStats, cfg: ScoringConfig) 
     Mede o quanto vale agir agora, não a chance de ganhar (a idade não prevê o resultado).
     """
     p25, p75, p95, stale = stats.won_p25, stats.won_p75, stats.won_p95, stats.stale_days
+    # Divisores nunca zero, caso o histórico tenha quantis coincidentes.
+    ramp_up, ramp_late, ramp_stale = max(p25, 1.0), max(p95 - p75, 1.0), max(stale - p95, 1.0)
     age = age_days.astype(float)
     factor = np.select(
         [
@@ -89,11 +95,11 @@ def timing_points(age_days: pd.Series, stats: HistoryStats, cfg: ScoringConfig) 
         ],
         [
             0.0,
-            0.5 + 0.5 * age / p25,
+            0.5 + 0.5 * age / ramp_up,
             1.0,
-            1.0 - 0.5 * (age - p75) / (p95 - p75),
+            1.0 - 0.5 * (age - p75) / ramp_late,
         ],
-        default=0.5 * (stale - age) / (stale - p95),
+        default=(0.5 * (stale - age) / ramp_stale).clip(0, 0.5),
     )
     return pd.Series(cfg.weight_timing * factor, index=age_days.index)
 
@@ -142,12 +148,28 @@ def assign_bands(df: pd.DataFrame, cfg: ScoringConfig = DEFAULT_CONFIG) -> pd.Se
     return band
 
 
+def split_at_reference(deals: pd.DataFrame, reference_date: pd.Timestamp) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Separa o que se sabia em `reference_date`: (deals abertos naquele dia, histórico fechado até ele).
+
+    Evita vazamento quando a data de referência é anterior ao fim dos dados: deals fechados
+    depois dela voltam a ser abertos (sem desfecho), e deals engajados depois dela ficam de fora.
+    Deals que nunca foram engajados (Prospecting, sem nenhuma data) são sempre incluídos.
+    """
+    closed_by_ref = deals["close_date"].notna() & (deals["close_date"] <= reference_date)
+    open_at_ref = ~closed_by_ref & (deals["engage_date"].isna() | (deals["engage_date"] <= reference_date))
+    open_deals = deals[open_at_ref].copy()
+    open_deals["deal_stage"] = np.where(open_deals["engage_date"].isna(), "Prospecting", "Engaging")
+    open_deals["close_date"] = pd.NaT
+    open_deals["close_value"] = np.nan
+    open_deals["is_open"], open_deals["is_won"] = True, False
+    return open_deals, deals[closed_by_ref]
+
+
 def build_priority_list(deals: pd.DataFrame, cfg: ScoringConfig = DEFAULT_CONFIG) -> tuple[pd.DataFrame, HistoryStats]:
-    """Deals abertos pontuados, com faixa, motivos e ação, prontos para a interface."""
+    """Deals abertos em `cfg.reference_date`, pontuados, com faixa, motivos e ação."""
     catalog_prices = deals.drop_duplicates("product")["sales_price"]
-    df, stats = score_open_deals(
-        deals[deals["is_open"]], deals[~deals["is_open"]], catalog_prices, cfg.reference_date, cfg
-    )
+    open_deals, history = split_at_reference(deals, cfg.reference_date)
+    df, stats = score_open_deals(open_deals, history, catalog_prices, cfg.reference_date, cfg)
     df["band"] = pd.Categorical(assign_bands(df, cfg), categories=BAND_ORDER, ordered=True)
     df["needs_crm_fix"] = ~df["has_account"]
     df["reasons"] = [explain.reasons(row, stats, cfg) for row in df.itertuples(index=False)]

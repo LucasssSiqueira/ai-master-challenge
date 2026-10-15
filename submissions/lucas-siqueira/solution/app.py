@@ -1,10 +1,16 @@
 """Lead Scorer — interface do vendedor. Só apresentação: regras de negócio ficam em lead_scorer/."""
+import sys
+from pathlib import Path
+
 import pandas as pd
 import streamlit as st
 
+# Garante o import de lead_scorer/ seja qual for o diretório de execução (e no AppTest de versões antigas).
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
 from lead_scorer.backtest import run_backtest
 from lead_scorer.config import DEFAULT_CONFIG as CFG
-from lead_scorer.data_loader import load_deals
+from lead_scorer.data_loader import DataValidationError, load_deals
 from lead_scorer.explain import money
 from lead_scorer.scoring import BAND_ORDER, build_priority_list
 
@@ -33,7 +39,14 @@ def backtest():
     return run_backtest(load_deals())
 
 
-deals, pipeline, stats = load()
+try:
+    deals, pipeline, stats = load()
+except (FileNotFoundError, DataValidationError, ValueError) as error:
+    st.error(
+        "Não foi possível carregar os dados do CRM. Confira se os 4 CSVs estão em `solution/data/` "
+        f"(veja o README).\n\nDetalhe: {error}"
+    )
+    st.stop()
 
 # ---------- Filtros ----------
 with st.sidebar:
@@ -47,7 +60,7 @@ with st.sidebar:
         options = sorted(pipeline[column].unique())
         selected = st.selectbox(view, options)
         df = pipeline[pipeline[column] == selected]
-    st.caption(f"Pipeline em **{CFG.reference_date:%d/%m/%Y}** (última data do CRM).")
+    st.caption(f"Pipeline em **{CFG.reference_date:%d/%m/%Y}** (data de referência; ajustável em `config.py`).")
     st.caption(
         f"O score (0–100) soma **Valor** (até {CFG.weight_value:.0f}) e **Momento** (até {CFG.weight_timing:.0f}). "
         "A chance histórica aparece como informação. Veja a aba *Como o score funciona*."
@@ -96,7 +109,7 @@ def score_breakdown(row: pd.Series) -> None:
 
 
 # ---------- Foco da semana ----------
-st.subheader("Seu foco esta semana")
+st.subheader("Seu foco esta semana" if view == "Vendedor" else "Foco da semana")
 focus = active.head(5)
 if focus.empty:
     st.info("Nenhum deal ativo. Comece pela aba **Requalificar**: confirme o que ainda está vivo.")
@@ -111,7 +124,12 @@ for rank, (_, row) in enumerate(focus.iterrows(), start=1):
 
 
 def deals_table(data: pd.DataFrame, key: str) -> pd.Series | None:
-    """Tabela com seleção de linha; devolve o deal selecionado."""
+    """Tabela com seleção de linha; devolve o deal selecionado.
+
+    A seleção do Streamlit é guardada por posição de linha. A chave depende dos deals exibidos,
+    então trocar de vendedor, visão ou faixa zera a seleção, em vez de apontar para outro deal
+    ou para uma posição que não existe mais.
+    """
     show = pd.DataFrame({
         "Faixa": data["band"].map(BAND_LABEL),
         "Score": data["score"],
@@ -123,13 +141,15 @@ def deals_table(data: pd.DataFrame, key: str) -> pd.Series | None:
         "Próxima ação": data["action"],
         "ID": data["opportunity_id"],
     })
+    if view == "Vendedor":
+        show = show.drop(columns="Vendedor")  # redundante: a tela inteira é de um vendedor
     event = st.dataframe(
         show,
         hide_index=True,
         width="stretch",
         on_select="rerun",
         selection_mode="single-row",
-        key=key,
+        key=f"{key}-{hash(tuple(data['opportunity_id']))}",
         column_config={
             "Score": st.column_config.ProgressColumn("Score", min_value=0, max_value=100, format="%d"),
             "Valor": st.column_config.NumberColumn("Valor (US$)", format="%d"),
@@ -138,7 +158,9 @@ def deals_table(data: pd.DataFrame, key: str) -> pd.Series | None:
         },
     )
     rows = event.selection.rows
-    return data.iloc[rows[0]] if rows else None
+    if not rows or rows[0] >= len(data):
+        return None
+    return data.iloc[rows[0]]
 
 
 def deal_detail(row: pd.Series | None) -> None:
@@ -197,6 +219,7 @@ with tab_stale:
     deal_detail(deals_table(stale.sort_values("sales_price", ascending=False), key="stale"))
 
 with tab_how:
+    active_all = pipeline[pipeline["band"].isin(["Alta", "Média", "Baixa"])]
     st.markdown(
         f"""
 ### O que o score mede
@@ -208,7 +231,7 @@ with tab_how:
 | **Chance** | {CFG.weight_prob:.0f} (informativo) | Taxa de vitória do vendedor com aquele produto, puxada para a média do time ({stats.base_win_rate:.0%}) quando há poucos deals. Aparece nos motivos, mas não entra no score: no histórico, não diferencia ganhos de perdidos. |
 
 ### Faixas
-- 🟢 **Alta**, 🟡 **Média** e ⚪ **Baixa**: deals em *Engaging* dentro do ciclo normal (top 25%, próximos 35% e o restante).
+- 🟢 **Alta**, 🟡 **Média** e ⚪ **Baixa**: deals em *Engaging* dentro do ciclo normal. Alta = score no percentil 75 ou acima; Média = entre os percentis 40 e 75; Baixa = o restante. Scores empatados no corte ficam na faixa de cima, por isso a Alta tem hoje {(active_all['band'] == 'Alta').mean():.0%} dos deals ativos, e não exatamente 25%.
 - 🔵 **Qualificar**: deals em *Prospecting*, ainda sem data de engajamento.
 - 🔴 **Requalificar**: mais de {CFG.stale_days} dias em *Engaging*. Nenhum deal do histórico fechou depois disso.
 
