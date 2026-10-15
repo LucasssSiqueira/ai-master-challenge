@@ -1,5 +1,7 @@
 # 01 — Product Requirements: Lead Scorer (Challenge 003)
 
+> **Registro histórico (Etapa 01):** este documento é o plano original, aprovado antes da implementação. O estado atual está no [README da submissão](../README.md) e nos docs 08–10 (por exemplo, os pesos passaram de 50/30/20 para 60/40/0, e a tabela foi refeita).
+
 > Etapa 01 — Discovery. Nenhum código de produto foi escrito.
 > Convenção usada neste documento:
 > - **[FATO-REPO]** — está escrito no repositório do desafio (README, submission guide, CONTRIBUTING).

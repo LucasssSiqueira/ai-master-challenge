@@ -1636,3 +1636,387 @@ Os detalhes estão em [10-pipeline-ux.md](docs/10-pipeline-ux.md).
 
 Pode enviar o redesign do Pipeline para o PR 196 (novo commit na mesma branch).
 
+- `update_plan` 
+- `export_transcript` 
+- `Bash` Regenerate sanitized export and scan it
+### 🤖 Assistente
+
+Export updated: all 13 of your messages, 0 emails, 0 paths. Copying to the PR branch and reviewing the diff.
+
+- `update_plan` 
+- `Bash` Sync to branch, review diff, run tests on branch copy
+### 🤖 Assistente
+
+The diff has exactly the 17 expected files, all inside the submission folder, with nothing sensitive, and the tests pass on the branch copy. Committing and pushing.
+
+- `update_plan` 
+- `Bash` Commit and push the pipeline redesign
+- `update_plan` 
+- `Bash` Verify the updated PR on GitHub
+- `wrap_up` 
+### 🤖 Assistente
+
+Enviei o redesign do Pipeline para o [Gestao-Quatro-Ponto-Zero/ai-master-challenge#196](https://github.com/Gestao-Quatro-Ponto-Zero/ai-master-challenge/pull/196) como o commit `cdd24fe`, na mesma branch. O PR continua aberto e sem conflitos, agora com 7 commits e 66 arquivos, todos dentro de `submissions/lucas-siqueira/`. Antes do envio, os 64 testes de unidade passaram na cópia exata da branch.
+
+O commit muda 17 arquivos:
+- **Pipeline novo:** a tabela interativa, as páginas Pipeline e Deals parados usando essa tabela, e a remoção da tabela e do card de detalhe antigos.
+- **Testes:** 5 testes da tabela e os 13 testes de navegador. Esses últimos só rodam com o app aberto e com o Playwright instalado.
+- **Documentação:** o doc 10, o process log da etapa e os screenshots 12 a 16, com o antes e o depois.
+- **Conversa exportada:** atualizada com suas 13 mensagens, sem email e sem caminhos do seu computador.
+
+Continuam em aberto o teste com uma pessoa real (CA9), o link do LinkedIn, que segue como `[URL]`, e a escolha entre "Good morning" e "Bom dia".
+
+---
+
+## 👤 Usuário
+
+https://www.linkedin.com/in/lucas-r-siqueira/
+
+
+AUDITORIA FINAL — AI MASTER CHALLENGE 003
+Atue como um Principal Software Engineer, Technical Reviewer e AI Engineering Lead responsável pela auditoria final da nossa submissão para o AI Master Challenge 003 — Lead Scorer.
+Sua missão é verificar se o projeto está completo, funcional, bem documentado e em conformidade com todas as exigências oficiais.
+Importante: Não quero apenas que você escreva um README bonito. Quero uma auditoria rigorosa, baseada em evidências reais do repositório.
+1. Contexto e documentação oficial
+Consulte integralmente:
+Challenge:
+https://github.com/Gestao-Quatro-Ponto-Zero/ai-master-challenge/tree/main/challenges/build-003-lead-scorer
+Guia de submissão:
+https://github.com/Gestao-Quatro-Ponto-Zero/ai-master-challenge/blob/main/submission-guide.md
+Template:
+https://github.com/Gestao-Quatro-Ponto-Zero/ai-master-challenge/blob/main/templates/submission-template.md
+Instruções de contribuição:
+https://github.com/Gestao-Quatro-Ponto-Zero/ai-master-challenge/blob/main/CONTRIBUTING.md
+Compare todas as exigências oficiais com os arquivos e funcionalidades realmente existentes no projeto.
+Se algum link estiver inacessível, informe a limitação e não presuma seu conteúdo.
+2. Auditoria técnica da solução
+Inspecione todo o código-fonte, estrutura de pastas, dependências e documentação.
+Verifique:
+
+* Aplicação funcional.
+* Uso dos dados reais do desafio.
+* Integridade dos relacionamentos do CRM.
+* Lógica de Lead Scoring.
+* Justificativas e explicabilidade dos scores.
+* Filtros e funcionalidades do dashboard.
+* Organização do código.
+* Tratamento de erros.
+* Segurança básica.
+* Instruções de instalação.
+* Limitações técnicas.
+
+Execute os testes disponíveis e tente iniciar a aplicação conforme as instruções documentadas.
+Não declare nenhuma funcionalidade como validada sem evidência de execução ou inspeção adequada.
+Classifique cada requisito como:
+
+* Aprovado.
+* Parcialmente atendido.
+* Não atendido.
+* Não verificado.
+
+3. Auditoria do README
+Localize o README da submissão.
+Verifique se contém:
+Sobre mim
+
+* Nome.
+* LinkedIn.
+* Challenge escolhido.
+
+Executive Summary
+
+* Problema enfrentado.
+* Solução desenvolvida.
+* Abordagem adotada.
+* Principal contribuição para o negócio.
+
+Solução
+
+* Descrição da aplicação.
+* Arquitetura.
+* Tecnologias utilizadas.
+* Funcionalidades implementadas.
+* Metodologia de scoring.
+* Dados utilizados.
+* Instruções de execução.
+
+Resultados / Findings
+
+* Descobertas reais sobre o dataset.
+* Métricas efetivamente calculadas.
+* Resultados dos testes.
+* Evidências da aplicação funcionando.
+* Screenshots ou links existentes.
+
+Recomendações
+
+* Ações recomendadas para a empresa.
+* Priorização por impacto e esforço.
+* Melhorias de curto e médio prazo.
+* Próximas evoluções.
+
+Limitações
+
+* Restrições do dataset.
+* Limitações do modelo de scoring.
+* Funcionalidades não implementadas.
+* Questões não verificadas.
+* Requisitos necessários para escalar a solução.
+
+Identifique conteúdo genérico, incompleto ou sem evidência.
+4. Auditoria do Process Log — OBRIGATÓRIO
+Esta é uma das etapas mais importantes.
+Verifique se existe um registro detalhado e verdadeiro da utilização de inteligência artificial durante o desenvolvimento.
+Ferramentas utilizadas
+Identifique as ferramentas de IA efetivamente utilizadas.
+Para cada ferramenta, documente:
+
+* Nome.
+* Objetivo.
+* Etapa de utilização.
+* Resultado produzido.
+* Evidência disponível.
+
+Não declare o uso de ferramentas sem registros que sustentem essa informação.
+Workflow
+Reconstrua a sequência real de desenvolvimento utilizando:
+
+* Histórico de commits.
+* Arquivos de documentação.
+* Conversas e prompts disponíveis.
+* Alterações no código.
+* Registros de testes.
+* Evidências de correções.
+
+Organize o processo nas etapas:
+
+1. Discovery e planejamento.
+2. Exploração e engenharia de dados.
+3. Desenvolvimento do scoring.
+4. Construção da interface.
+5. Testes e auditoria.
+6. Documentação e entrega.
+
+Para cada etapa, descreva:
+
+* Objetivo.
+* Ferramentas utilizadas.
+* Prompts, quando disponíveis.
+* Decisões tomadas.
+* Artefatos produzidos.
+* Resultado.
+* Evidências.
+
+Não crie uma narrativa fictícia caso o histórico não seja suficiente.
+Onde a IA errou e como corrigi
+Investigue os registros existentes para identificar:
+
+* Erros de implementação.
+* Problemas com dados.
+* Inconsistências no scoring.
+* Problemas de interface.
+* Falhas de integração.
+* Correções solicitadas.
+* Mudanças de abordagem.
+
+Para cada caso comprovado, registre:
+Problema identificado → Causa → Intervenção humana → Correção → Resultado.
+Se não houver evidências suficientes, sinalize a necessidade de documentação manual.
+Não invente erros apenas para preencher essa seção.
+O que eu adicionei que a IA sozinha não faria
+Identifique decisões humanas demonstráveis, como:
+
+* Priorização dos requisitos de negócio.
+* Simplificação da experiência do vendedor.
+* Escolha da metodologia de scoring.
+* Decisões de arquitetura.
+* Ajustes de interface.
+* Definição de critérios de qualidade.
+* Interpretação de resultados.
+* Avaliação crítica das recomendações da IA.
+
+Diferencie claramente decisões comprovadas de interpretações que precisam ser confirmadas pelo responsável pelo projeto.
+5. Auditoria das evidências
+Verifique a existência de:
+
+* Screenshots das conversas com IA.
+* Registros de prompts.
+* Histórico de commits.
+* Screenshots da aplicação.
+* Vídeos de demonstração, se houver.
+* Resultados dos testes.
+* Documentação de decisões.
+
+Classifique as evidências em:
+
+1. Existentes e verificadas.
+2. Existentes, mas insuficientes.
+3. Ausentes.
+4. Dependentes de fornecimento manual.
+
+Não crie screenshots ou evidências artificiais.
+Se faltarem evidências, apresente exatamente o que preciso capturar e como organizar os arquivos.
+6. Atualização da documentação
+Após concluir a auditoria:
+
+1. Corrija erros objetivos na documentação.
+2. Complete seções sustentadas por evidências.
+3. Melhore a clareza e a organização do README.
+4. Organize o Process Log.
+5. Documente limitações reais.
+6. Adicione referências relativas aos arquivos de evidência existentes.
+7. Sinalize todas as informações pendentes de confirmação.
+
+Não modifique o código funcional sem necessidade ou autorização.
+Não altere resultados de testes nem invente métricas.
+Preserve os requisitos do template oficial.
+7. Relatório final da auditoria
+Crie `docs/final-submission-audit.md`.
+O documento deve conter:
+A. Resumo executivo
+Situação geral da submissão.
+B. Matriz de conformidade
+Requisito | Status | Evidência | Ação necessária.
+C. Problemas críticos
+Riscos que podem comprometer a avaliação ou causar desclassificação.
+D. Pendências
+Tudo que precisa ser concluído.
+E. Qualidade da documentação
+Pontos fortes e fracos do README e Process Log.
+F. Plano de correção
+Lista de tarefas ordenada por prioridade.
+G. Checklist final
+Todos os requisitos antes da criação do Pull Request.
+8. Critérios de aprovação
+A submissão somente poderá ser considerada pronta quando:
+
+* A aplicação funcionar.
+* Os requisitos obrigatórios estiverem atendidos.
+* O scoring estiver documentado.
+* Os testes disponíveis estiverem executados.
+* O README estiver completo.
+* O Process Log estiver completo.
+* As evidências estiverem organizadas.
+* As limitações estiverem documentadas.
+* A estrutura estiver conforme o CONTRIBUTING.md.
+* Não houver problemas críticos conhecidos.
+
+Regra fundamental
+Quero uma auditoria técnica independente e criteriosa.
+Não concorde automaticamente com implementações existentes.
+Questione decisões quando houver evidências de problemas.
+Não confunda documentação com comprovação.
+Não invente resultados, ferramentas, intervenções humanas ou etapas do processo.
+Se algo não puder ser verificado, diga explicitamente.
+Meu objetivo não é apenas entregar um projeto funcional, mas demonstrar organização, domínio técnico, pensamento crítico e capacidade de liderar o desenvolvimento com inteligência artificial.
+Comece apresentando a matriz de conformidade e as pendências críticas.
+Depois, corrija e organize a documentação com base nas evidências disponíveis.
+Ao final, informe claramente se a submissão está pronta ou não para avaliação.
+
+### 🤖 Assistente
+
+This is the final audit of the same project, so I'll do it here. Plan:
+1. **Official docs.** Re-read them from upstream as they are today, since they may have changed since the start.
+2. **Install as an evaluator would.** A clean clone of the PR branch, then the README's own instructions: install, tests, app and browser tests.
+3. **README and process log.** Audit both against the template and against the evidence.
+4. **Report and fixes.** Write `docs/final-submission-audit.md` and fix the documentation. I'll fill in the LinkedIn link you sent.
+
+I won't touch functional code, and I'll only update the PR after you confirm.
+
+- `update_plan` 
+- `Bash` Fetch current official docs and compare with start
+- `update_plan` 
+- `Bash` Fresh clone, install and run documented commands
+- `Bash` Start app per README and run e2e and AppTest
+### 🤖 Assistente
+
+**One browser test failed in the evaluator environment.** I won't dismiss it; checking which one and why.
+
+- `Bash` Show which e2e test failed and why
+- `Bash` Rerun e2e capturing failure details to a file
+- `Bash` Run e2e twice against cold-started servers
+- `update_plan` 
+- `Bash` Inspect code for safety, errors, size and git history
+- `Bash` Check secrets, broad excepts and external resources
+- `update_plan` 
+- `Read` <projeto>/README.md
+- `Bash` Verify feature presence, reason counts, and prompt evidence
+- `update_plan` 
+- `Write` <projeto>/process-log/test-results.md
+- `Write` <projeto>/docs/final-submission-audit.md
+- `update_plan` 
+- `Write` <projeto>/README.md
+### 🤖 Assistente
+
+Checking two facts I just wrote: how many screenshots there are, and where each one came from (screenshot 12 is yours, not an automated capture).
+
+- `Bash` Count screenshots and fix their attribution
+### 🤖 Assistente
+
+Now the `process-log/` index, organized into the 6 phases, plus a short note on docs 01–03 marking them as the original plan so nobody reads them as the current state.
+
+- `Write` <projeto>/process-log/README.md
+- `Bash` Add historical notes, check links and sensitive data
+### 🤖 Assistente
+
+Stopping the auditor server I started on port 8503, and only that one.
+
+- `Bash` Stop only the audit server on 8503
+- `wrap_up` 
+### 🤖 Assistente
+
+A submissão ainda não está pronta para avaliação, mas faltam só duas ações suas. O software está aprovado: rodei tudo como um avaliador faria (clone limpo do PR, ambiente novo, só os comandos do README) e não há problema crítico de software em aberto. Os problemas críticos encontrados estavam na documentação e já foram corrigidos, mas nada foi enviado ao PR ainda.
+
+**Matriz de conformidade**
+
+| Requisito | Status | Evidência |
+|---|---|---|
+| App funciona | Aprovado | Instalação limpa, servidor no ar, todas as telas abrem sem erro |
+| Usa os dados reais | Aprovado | 8.800 deals, contagens conferidas com os CSVs |
+| Score não é só ordenar por valor | Aprovado | Correlação de ranking 0,75 com o preço (1,0 seria só valor) |
+| Explica o porquê de cada score | Aprovado | Motivos, tooltip e painel, cobertos por testes |
+| Setup, lógica e limitações documentados | Aprovado | Comandos do README executados nesta auditoria |
+| Estrutura do `CONTRIBUTING.md` | Aprovado | 66 arquivos, nenhum fora da sua pasta; título e branch no formato |
+| Process log | Aprovado com pendência | Falta você confirmar a seção em primeira pessoa |
+| Testes no navegador | Parcial | 13/13 em 3 de 4 rodadas; uma falha que não se repetiu, causa desconhecida |
+| Vendedor não técnico entende a tela (CA9) | Não verificado | Precisa de um teste com uma pessoa real |
+
+Os documentos oficiais não mudaram desde o início da sessão (conferido com `diff`).
+
+**Problemas críticos encontrados e corrigidos:**
+1. **Funcionalidade inexistente descrita:** o README falava de um "resumo por vendedor" removido no redesign.
+2. **Autoria dos erros confusa:** "Onde a IA errou e como corrigi" dava a entender que você detectou erros que a própria IA encontrou. Agora cada linha diz quem detectou, conforme a conversa.
+3. **Afirmação impossível de provar:** "a IA teria partido direto para um score" foi removida.
+4. **Atribuição errada:** a instalação limpa como critério seu foi corrigida. Foi iniciativa da IA; o que você exigiu, com essas palavras, foi "não declarar teste aprovado sem executá-lo".
+
+**Outras correções:**
+- **LinkedIn** preenchido.
+- **Checklist de evidências:** restaurado como no template oficial.
+- **Histórico de commits:** agora o README explica que os 4 primeiros foram criados juntos no envio.
+- **Docs 01 e 03:** marcados como plano original, para não serem lidos como o estado atual.
+
+**Arquivos novos:**
+- **[final-submission-audit.md](docs/final-submission-audit.md):** o relatório completo pedido, com resumo, matriz, problemas, pendências, plano e checklist.
+- **[test-results.md](process-log/test-results.md):** o resultado real de cada comando executado.
+- **[Índice do process log](process-log/README.md):** organizado nas 6 fases, com a origem de cada screenshot.
+
+**O que depende de você:**
+- **Confirmar "O que eu adicionei"** (bloqueia). A seção está em primeira pessoa e lista só o que seus prompts comprovam. Você pode acrescentar motivações ou decisões tomadas fora desta conversa.
+- **Dizer se usou outra ferramenta de IA** fora desta sessão. Se sim, ela entra no README.
+- **Autorizar o envio ao PR 196** (bloqueia).
+- **Opcional:** o teste com uma pessoa real (CA9) e um vídeo do uso.
+
+**Pendências técnicas (não bloqueiam):**
+- A falha intermitente nos testes de navegador.
+- O "138 dias" escrito direto no código, num rótulo da página de deals parados. Não mexi porque você pediu para não alterar código funcional sem necessidade.
+
+---
+
+## 👤 Usuário
+
+Confirmo a seção "O que eu adicionei" como está e não usei outras ferramentas de IA. Pode enviar a revisão ao PR 196.
+
+- `update_plan` 
+- `Bash` Record author confirmations in README and audit
+- `update_plan` 
+- `export_transcript` 

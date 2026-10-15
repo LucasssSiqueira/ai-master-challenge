@@ -1,5 +1,7 @@
 # 03 — Implementation Plan: Lead Scorer
 
+> **Registro histórico (Etapa 01):** este documento é o plano original, aprovado antes da implementação. O estado atual está no [README da submissão](../README.md) e nos docs 08–10 (por exemplo, os pesos passaram de 50/30/20 para 60/40/0, e a tabela foi refeita).
+
 > Orçamento: **6 horas** (o desafio sugere 4–6h). Já gastos na Etapa 01 (discovery + EDA): ~1h.
 > Regra de ouro: **ao final de cada fase existe algo que roda.** Se o tempo apertar, corta-se do fim da lista, nunca a base.
 
